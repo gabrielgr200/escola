@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buscar Escola</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+    <h1>Buscar Escola</h1>
+    <label for="ano">Ano:</label>
+    <select id="ano">
+        <option value="">Selecione o Ano</option>
+    </select><br><br>
+    
+    <label for="ensino">Ensino:</label>
+    <select id="ensino">
+        <option value="">Selecione o Tipo de Ensino</option>
+    </select><br><br>
+    
+    <label for="rede">Rede:</label>
+    <select id="rede">
+        <option value="">Selecione o Tipo de Rede</option>
+    </select><br><br>
+
+    <button onclick="buscarEscola()">Buscar</button><br><br>
+
+    <table id="tabelaResultados">
+        <thead>
+            <tr>
+                <th>Nome da Escola</th>
+                <th>Ano</th>
+                <th>Rede</th>
+                <th>Ensino</th>
+                <th>Anos Escolares</th>
+                <th>Taxa de Aprovação</th>
+                <th>Indicador de Rendimento</th>
+                <th>Nota Saeb Matemática</th>
+                <th>Nota Saeb Língua Portuguesa</th>
+                <th>Nota Saeb Média Padronizada</th>
+                <th>Ideb</th>
+                <th>Projeção</th>
+            </tr>
+        </thead>
+        <tbody id="resultados"></tbody>
+    </table>
+
+    <script>
+        function preencherSelects() {
+            fetch('/buscar-valores')
+                .then(response => response.json())
+                .then(data => {
+                    const anosSelect = document.getElementById("ano");
+                    const ensinoSelect = document.getElementById("ensino");
+                    const redeSelect = document.getElementById("rede");
+
+                    data.anos.forEach(ano => {
+                        const option = document.createElement('option');
+                        option.value = ano;
+                        option.textContent = ano;
+                        anosSelect.appendChild(option);
+                    });
+
+                    data.ensinos.forEach(ensino => {
+                        const option = document.createElement('option');
+                        option.value = ensino;
+                        option.textContent = ensino;
+                        ensinoSelect.appendChild(option);
+                    });
+
+                    data.redes.forEach(rede => {
+                        const option = document.createElement('option');
+                        option.value = rede;
+                        option.textContent = rede;
+                        redeSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Erro:', error));
+        }
+
+        function buscarEscola() {
+            const ano = document.getElementById("ano").value;
+            const ensino = document.getElementById("ensino").value;
+            const rede = document.getElementById("rede").value;
+
+            fetch(`/buscar-escola?ano=${ano}&ensino=${ensino}&rede=${rede}`)
+                .then(response => response.json())
+                .then(data => {
+                    const tabelaResultados = document.getElementById("tabelaResultados");
+                    const resultados = document.getElementById("resultados");
+                    resultados.innerHTML = ''; 
+
+                    if (data.length === 0) {
+                        resultados.innerHTML = '<tr><td colspan="12">Nenhum resultado encontrado.</td></tr>';
+                    } else {
+                        data.forEach(escola => {
+                            const row = tabelaResultados.insertRow();
+                            row.innerHTML += `<td>${escola['Nome_da_escola']}</td>`;
+                            row.innerHTML += `<td>${escola['ano']}</td>`;
+                            row.innerHTML += `<td>${escola['rede']}</td>`;
+                            row.innerHTML += `<td>${escola['ensino']}</td>`;
+                            row.innerHTML += `<td>${escola['anos_escolares']}</td>`;
+                            row.innerHTML += `<td>${escola['taxa_aprovacao']}</td>`;
+                            row.innerHTML += `<td>${escola['indicador_rendimento']}</td>`;
+                            row.innerHTML += `<td>${escola['nota_saeb_matematica']}</td>`;
+                            row.innerHTML += `<td>${escola['nota_saeb_lingua_portuguesa']}</td>`;
+                            row.innerHTML += `<td>${escola['nota_saeb_media_padronizada']}</td>`;
+                            row.innerHTML += `<td>${escola['ideb']}</td>`;
+                            row.innerHTML += `<td>${escola['projecao']}</td>`;
+                        });
+                    }
+                })
+                .catch(error => console.error('Erro:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            preencherSelects();
+        });
+    </script>
+</body>
+</html>
