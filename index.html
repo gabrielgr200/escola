@@ -46,6 +46,7 @@
         <thead>
             <tr>
                 <th>Nome da Escola</th>
+                <th>ID da escola</th>
                 <th>Ano</th>
                 <th>Rede</th>
                 <th>Ensino</th>
@@ -128,6 +129,7 @@
                         data.forEach(escola => {
                             const row = document.createElement('tr');
                             row.innerHTML += `<td>${escola['Nome_da_escola']}</td>`;
+                            row.innerHTML += `<td>${escola['id_escola']}</td>`;
                             row.innerHTML += `<td>${escola['ano']}</td>`;
                             row.innerHTML += `<td>${escola['rede']}</td>`;
                             row.innerHTML += `<td>${escola['ensino']}</td>`;
