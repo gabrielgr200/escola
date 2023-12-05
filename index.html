@@ -68,7 +68,7 @@
 
     <script>
         function preencherSelects() {
-            fetch('https://api-escola-aniz.onrender.com/buscar-valores')
+            fetch('https://api-escola-ja85.onrender.com/buscar-valores')
                 .then(response => response.json())
                 .then(data => {
                     const anosSelect = document.getElementById("ano");
@@ -119,7 +119,7 @@
             const nomeEscola = document.getElementById("nomeEscola").value;
             const mostrarMelhorRendimento = document.getElementById("mostrarMelhorRendimento").checked;
 
-            fetch(`https://api-escola-aniz.onrender.com/buscar-escola?ano=${ano}&ensino=${ensino}&rede=${rede}&nomeEscola=${nomeEscola}`)
+            fetch(`https://api-escola-ja85.onrender.com/buscar-escola?ano=${ano}&ensino=${ensino}&rede=${rede}&nomeEscola=${nomeEscola}`)
                 .then(response => response.json())
                 .then(data => {
                     const tabelaResultados = document.getElementById("tabelaResultados");
