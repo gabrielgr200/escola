@@ -1,11 +1,7 @@
 @media screen and (max-width: 1920px) {
     .select-container {
         width: 90%;
-        margin-left: 100px;
+        margin-left: 30px;
         justify-content: space-around;
-    }
-
-    .select-group {
-        padding-left: 0;
     }
 }
