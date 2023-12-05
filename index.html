@@ -65,7 +65,7 @@
 
     <script>
         function preencherSelects() {
-            fetch('https://api-escola-u0iw.onrender.com/buscar-valores')
+            fetch('https://api-escola-p3gr.onrender.com/buscar-valores')
                 .then(response => response.json())
                 .then(data => {
                     const anosSelect = document.getElementById("ano");
@@ -115,7 +115,7 @@
             const rede = document.getElementById("rede").value;
             const nomeEscola = document.getElementById("nomeEscola").value;
 
-            fetch(`https://api-escola-u0iw.onrender.com/buscar-escola?ano=${ano}&ensino=${ensino}&rede=${rede}&nomeEscola=${nomeEscola}`)
+            fetch(`https://api-escola-p3gr.onrender.com/buscar-escola?ano=${ano}&ensino=${ensino}&rede=${rede}&nomeEscola=${nomeEscola}`)
                 .then(response => response.json())
                 .then(data => {
                     const tabelaResultados = document.getElementById("tabelaResultados");
