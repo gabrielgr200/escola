@@ -111,9 +111,14 @@ tr:hover {
 }
 
 .search-button {
-    margin-bottom: 20px; /* Espaçamento na parte inferior do botão */
+    margin-bottom: 20px;
 }
 
-label[for="mostrarMelhorRendimento"] {
-    margin-right: 10px; /* Espaçamento à direita do label */
+.label {
+    margin-top: 10px;
+    margin-left: 10px;
 }
+
+/* label[for="mostrarMelhorRendimento"] {
+    margin-right: 6px;
+} */
