@@ -1,27 +1,46 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Buscar Escola</title>
     <link rel="stylesheet" href="css.css">
 </head>
-<body>
-    <h1>Buscar Escola</h1>
-    <label for="ano">Ano:</label>
-    <select id="ano">
-        <option value="">Selecione o Ano</option>
-    </select><br><br>
-    
-    <label for="ensino">Ensino:</label>
-    <select id="ensino">
-        <option value="">Selecione o Tipo de Ensino</option>
-    </select><br><br>
-    
-    <label for="rede">Rede:</label>
-    <select id="rede">
-        <option value="">Selecione o Tipo de Rede</option>
-    </select><br><br>
 
-    <button onclick="buscarEscola()">Buscar</button><br><br>
+<body>
+    <div class="select-container">
+        <h1>Buscar Escola</h1>
+        <div class="select-group">
+            <label for="ano">Ano:</label>
+            <select id="ano">
+                <option value="">Selecione o Ano</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <label for="ensino">Ensino:</label>
+            <select id="ensino">
+                <option value="">Selecione o Tipo de Ensino</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <label for="rede">Rede:</label>
+            <select id="rede">
+                <option value="">Selecione o Tipo de Rede</option>
+            </select>
+        </div>
+        <div class="select-group">
+            <label for="nomeEscola">Nome da Escola:</label>
+            <select id="nomeEscola">
+                <option value="">Selecione a Escola</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="search-button">
+        <button class="button" onclick="buscarEscola()">Buscar</button> 
+    </div> 
+    <span>
+        <p class="text">Clique no buscar sem selecionar as opções para mostrar todas as escolas</p>
+    </span>
 
     <table id="tabelaResultados">
         <thead>
@@ -36,21 +55,27 @@
                 <th>Nota Saeb Matemática</th>
                 <th>Nota Saeb Língua Portuguesa</th>
                 <th>Nota Saeb Média Padronizada</th>
-                <th>Ideb</th>
-                <th>Projeção</th>
             </tr>
         </thead>
-        <tbody id="resultados"></tbody>
+        <tbody id="resultados">
+
+        </tbody>
     </table>
 
     <script>
         function preencherSelects() {
-            fetch('/buscar-valores')
+            fetch('https://api-escola-u0iw.onrender.com/buscar-valores')
                 .then(response => response.json())
                 .then(data => {
                     const anosSelect = document.getElementById("ano");
                     const ensinoSelect = document.getElementById("ensino");
                     const redeSelect = document.getElementById("rede");
+                    const nomeEscolaSelect = document.getElementById("nomeEscola");
+
+                    anosSelect.innerHTML = '<option value="">Selecione o Ano</option>';
+                    ensinoSelect.innerHTML = '<option value="">Selecione o Tipo de Ensino</option>';
+                    redeSelect.innerHTML = '<option value="">Selecione o Tipo de Rede</option>';
+                    nomeEscolaSelect.innerHTML = '<option value="">Selecione a Escola</option>';
 
                     data.anos.forEach(ano => {
                         const option = document.createElement('option');
@@ -72,6 +97,13 @@
                         option.textContent = rede;
                         redeSelect.appendChild(option);
                     });
+
+                    data.nomesEscola.forEach(nomeEscola => {
+                        const option = document.createElement('option');
+                        option.value = nomeEscola;
+                        option.textContent = nomeEscola;
+                        nomeEscolaSelect.appendChild(option);
+                    });
                 })
                 .catch(error => console.error('Erro:', error));
         }
@@ -80,19 +112,21 @@
             const ano = document.getElementById("ano").value;
             const ensino = document.getElementById("ensino").value;
             const rede = document.getElementById("rede").value;
+            const nomeEscola = document.getElementById("nomeEscola").value;
 
-            fetch(`/buscar-escola?ano=${ano}&ensino=${ensino}&rede=${rede}`)
+            fetch(`https://api-escola-u0iw.onrender.com/buscar-escola?ano=${ano}&ensino=${ensino}&rede=${rede}&nomeEscola=${nomeEscola}`)
                 .then(response => response.json())
                 .then(data => {
                     const tabelaResultados = document.getElementById("tabelaResultados");
                     const resultados = document.getElementById("resultados");
-                    resultados.innerHTML = ''; 
+                    resultados.innerHTML = '';
 
                     if (data.length === 0) {
-                        resultados.innerHTML = '<tr><td colspan="12">Nenhum resultado encontrado.</td></tr>';
+                        tabelaResultados.style.display = "none";
                     } else {
+                        tabelaResultados.style.display = "";
                         data.forEach(escola => {
-                            const row = tabelaResultados.insertRow();
+                            const row = document.createElement('tr');
                             row.innerHTML += `<td>${escola['Nome_da_escola']}</td>`;
                             row.innerHTML += `<td>${escola['ano']}</td>`;
                             row.innerHTML += `<td>${escola['rede']}</td>`;
@@ -103,8 +137,7 @@
                             row.innerHTML += `<td>${escola['nota_saeb_matematica']}</td>`;
                             row.innerHTML += `<td>${escola['nota_saeb_lingua_portuguesa']}</td>`;
                             row.innerHTML += `<td>${escola['nota_saeb_media_padronizada']}</td>`;
-                            row.innerHTML += `<td>${escola['ideb']}</td>`;
-                            row.innerHTML += `<td>${escola['projecao']}</td>`;
+                            resultados.appendChild(row);
                         });
                     }
                 })
@@ -116,4 +149,5 @@
         });
     </script>
 </body>
+
 </html>
