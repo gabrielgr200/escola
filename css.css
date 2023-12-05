@@ -109,3 +109,11 @@ tr:nth-child(even) {
 tr:hover {
     background-color: #ccc;
 }
+
+.search-button {
+    margin-bottom: 20px; /* Espaçamento na parte inferior do botão */
+}
+
+label[for="mostrarMelhorRendimento"] {
+    margin-right: 10px; /* Espaçamento à direita do label */
+}

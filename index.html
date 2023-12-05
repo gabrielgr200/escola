@@ -37,8 +37,10 @@
     </div>
 
     <div class="search-button">
-        <button class="button" onclick="buscarEscola()">Buscar</button> 
-    </div> 
+        <button class="button" onclick="buscarEscola()">Buscar</button>
+        <label for="mostrarMelhorRendimento">Mostrar melhor rendimento:</label>
+        <input type="checkbox" id="mostrarMelhorRendimento" onchange="buscarEscola()">
+    </div>
     <span>
         <p class="text">Clique no buscar sem selecionar as opções para mostrar todas as escolas</p>
     </span>
@@ -115,6 +117,7 @@
             const ensino = document.getElementById("ensino").value;
             const rede = document.getElementById("rede").value;
             const nomeEscola = document.getElementById("nomeEscola").value;
+            const mostrarMelhorRendimento = document.getElementById("mostrarMelhorRendimento").checked;
 
             fetch(`https://api-escola-aniz.onrender.com/buscar-escola?ano=${ano}&ensino=${ensino}&rede=${rede}&nomeEscola=${nomeEscola}`)
                 .then(response => response.json())
@@ -128,21 +131,51 @@
                         resultados.innerHTML = '<p>Nenhuma informação encontrada para os critérios selecionados.</p>';
                     } else {
                         tabelaResultados.style.display = "";
-                        data.forEach(escola => {
-                            const row = document.createElement('tr');
-                            row.innerHTML += `<td>${escola['Nome_da_escola']}</td>`;
-                            row.innerHTML += `<td>${escola['id_escola']}</td>`;
-                            row.innerHTML += `<td>${escola['ano']}</td>`;
-                            row.innerHTML += `<td>${escola['rede']}</td>`;
-                            row.innerHTML += `<td>${escola['ensino']}</td>`;
-                            row.innerHTML += `<td>${escola['anos_escolares']}</td>`;
-                            row.innerHTML += `<td>${escola['taxa_aprovacao']}</td>`;
-                            row.innerHTML += `<td>${escola['indicador_rendimento']}</td>`;
-                            row.innerHTML += `<td>${escola['nota_saeb_matematica']}</td>`;
-                            row.innerHTML += `<td>${escola['nota_saeb_lingua_portuguesa']}</td>`;
-                            row.innerHTML += `<td>${escola['nota_saeb_media_padronizada']}</td>`;
-                            resultados.appendChild(row);
-                        });
+                        if (mostrarMelhorRendimento) {
+                            let melhorEscola = null;
+                            let melhorIndicador = -Infinity;
+
+                            data.forEach(escola => {
+                                const indicadorRendimento = escola['indicador_rendimento'];
+
+                                if (indicadorRendimento > melhorIndicador) {
+                                    melhorIndicador = indicadorRendimento;
+                                    melhorEscola = escola;
+                                }
+                            });
+
+                            if (melhorEscola !== null) {
+                                const row = document.createElement('tr');
+                                row.innerHTML += `<td>${melhorEscola['Nome_da_escola']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['id_escola']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['ano']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['rede']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['ensino']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['anos_escolares']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['taxa_aprovacao']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['indicador_rendimento']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['nota_saeb_matematica']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['nota_saeb_lingua_portuguesa']}</td>`;
+                                row.innerHTML += `<td>${melhorEscola['nota_saeb_media_padronizada']}</td>`;
+                                resultados.appendChild(row);
+                            }
+                        } else {
+                            data.forEach(escola => {
+                                const row = document.createElement('tr');
+                                row.innerHTML += `<td>${escola['Nome_da_escola']}</td>`;
+                                row.innerHTML += `<td>${escola['id_escola']}</td>`;
+                                row.innerHTML += `<td>${escola['ano']}</td>`;
+                                row.innerHTML += `<td>${escola['rede']}</td>`;
+                                row.innerHTML += `<td>${escola['ensino']}</td>`;
+                                row.innerHTML += `<td>${escola['anos_escolares']}</td>`;
+                                row.innerHTML += `<td>${escola['taxa_aprovacao']}</td>`;
+                                row.innerHTML += `<td>${escola['indicador_rendimento']}</td>`;
+                                row.innerHTML += `<td>${escola['nota_saeb_matematica']}</td>`;
+                                row.innerHTML += `<td>${escola['nota_saeb_lingua_portuguesa']}</td>`;
+                                row.innerHTML += `<td>${escola['nota_saeb_media_padronizada']}</td>`;
+                                resultados.appendChild(row);
+                            });
+                        }
                     }
                 })
                 .catch(error => {
