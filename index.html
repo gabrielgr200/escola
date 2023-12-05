@@ -125,6 +125,7 @@
 
                     if (data.length === 0) {
                         tabelaResultados.style.display = "none";
+                        resultados.innerHTML = '<p>Nenhuma informação encontrada para os critérios selecionados.</p>';
                     } else {
                         tabelaResultados.style.display = "";
                         data.forEach(escola => {
@@ -144,7 +145,11 @@
                         });
                     }
                 })
-                .catch(error => console.error('Erro:', error));
+                .catch(error => {
+                    console.error('Erro:', error);
+                    const resultados = document.getElementById("resultados");
+                    resultados.innerHTML = '<p>Ocorreu um erro ao buscar as informações das escolas. Por favor, tente novamente.</p>';
+                });
         }
 
         document.addEventListener('DOMContentLoaded', function () {
